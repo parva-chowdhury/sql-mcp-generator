@@ -1,0 +1,1028 @@
+{
+  "database": "ccs-aquila-tahoe",
+  "tables": [
+    {
+      "name": "ccs-aquila-tahoe-customersdimension",
+      "description": "Customers Dimension Table containing workspace and account details from the Account Management (AM) system",
+      "columns": [
+        {
+          "name": "platform_customer_id",
+          "type": "varchar",
+          "nullable": false,
+          "description": "Workspace ID (from table AM Customers): This is unique identifier for each workspace in GLP."
+        },
+        {
+          "name": "msp_id",
+          "type": "varchar",
+          "nullable": true,
+          "description": "MSP workspace ID if applicable (from table AM Customers): If the workspace is a tenant workspace, this field is the workspace id of its related MSP; otherwise, the field is same as account_type."
+        },
+        {
+          "name": "region",
+          "type": "varchar",
+          "nullable": true,
+          "description": "Region (from table AM Customers): The region associated with the workspace. Use with caution: The definition and accuracy of this field are not clearly documented."
+        },
+        {
+          "name": "created_by",
+          "type": "varchar",
+          "nullable": true,
+          "description": "Creator email (from table AM Customer): The email address of the user who created the workspace."
+        },
+        {
+          "name": "company_email_domain",
+          "type": "varchar",
+          "nullable": true,
+          "description": "Workspace contact email domain: The domain extracted from the workspace's primary contact email address."
+        },
+        {
+          "name": "company_name",
+          "type": "varchar",
+          "nullable": true,
+          "description": "Workspace name (from table AM Customer Contact): The name of the workspace."
+        },
+        {
+          "name": "country_code",
+          "type": "varchar",
+          "nullable": true,
+          "description": "Workspace country code (from table AM Customer Contact): The two-letter country code associated with the workspace's address."
+        },
+        {
+          "name": "account_type",
+          "type": "varchar",
+          "nullable": true,
+          "description": "Workspace type (from table AM Customers): Includes Standalone, Tenant, or MSP."
+        },
+        {
+          "name": "account_status",
+          "type": "varchar",
+          "nullable": true,
+          "description": "Workspace status (from table AM Customers): Includes Active, Blocked, Pending, Delete_initiated."
+        },
+        {
+          "name": "operational_mode",
+          "type": "varchar",
+          "nullable": true,
+          "description": "Operational mode (from table AM Customers): Includes MSP_Owned_inventory, Customer_owned_inventory, Default."
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp",
+          "nullable": true,
+          "description": "Timestamp of workspace created (from table AM Customer)."
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamp",
+          "nullable": true,
+          "description": "Timestamp of workspace last updated (from table AM Customers)."
+        },
+        {
+          "name": "country",
+          "type": "varchar",
+          "nullable": true,
+          "description": "Workspace country name: this field is derived from workspace's country_code."
+        },
+        {
+          "name": "company_email",
+          "type": "varchar",
+          "nullable": true,
+          "description": "Workspace contact email (from table AM Customer Contact)."
+        },
+        {
+          "name": "company_region",
+          "type": "varchar",
+          "nullable": true,
+          "description": "Workspace address country region: derived from workspace's country_code."
+        },
+        {
+          "name": "company_subregion1",
+          "type": "varchar",
+          "nullable": true,
+          "description": "Workspace address country sub region 1: derived from workspace's country_code."
+        },
+        {
+          "name": "company_subregion2",
+          "type": "varchar",
+          "nullable": true,
+          "description": "Workspace address country sub region 2: derived from workspace's country_code."
+        },
+        {
+          "name": "company_subregion3",
+          "type": "varchar",
+          "nullable": true,
+          "description": "Workspace address country sub region 3: derived from workspace's country_code."
+        },
+        {
+          "name": "is_test_workspace",
+          "type": "boolean",
+          "nullable": true,
+          "description": "True: the workspace is a test workspace; False: the workspace is a non-test workspace."
+        },
+        {
+          "name": "partition_date",
+          "type": "varchar",
+          "nullable": false,
+          "description": "Data snapshot date (yyyy-MM-DD). BI model is updated on daily basis."
+        },
+        {
+          "name": "iam_v2_workspace",
+          "type": "boolean",
+          "nullable": true,
+          "description": "True: the workspace is an IAM V2 Workspace; False: the workspace is not an IAM V2 Workspace."
+        },
+        {
+          "name": "organization_id",
+          "type": "varchar",
+          "nullable": true,
+          "description": "Represents the organization_id of a customer. Derived from AM Table Customers."
+        },
+        {
+          "name": "workspace_auth_version",
+          "type": "varchar",
+          "nullable": true,
+          "description": "Auth version of a workspace (v1 or v2)."
+        },
+        {
+          "name": "multi_fa_enabled",
+          "type": "boolean",
+          "nullable": true,
+          "description": "Indicates whether a customer has multi-factor authentication (multi_fa) enabled."
+        },
+        {
+          "name": "application_customer_id",
+          "type": "varchar",
+          "nullable": true,
+          "description": "Alias for customer_id from the Customers table in Account Management (AM)."
+        },
+        {
+          "name": "ip_access_rules_enabled",
+          "type": "boolean",
+          "nullable": true,
+          "description": "Indicates whether IP access rules are enabled for the customer."
+        },
+        {
+          "name": "is_active",
+          "type": "boolean",
+          "nullable": true,
+          "description": "Indicates whether the customer is currently active."
+        },
+        {
+          "name": "has_location_tag",
+          "type": "boolean",
+          "nullable": true,
+          "description": "Indicates whether the customer has any locations with associated tags."
+        },
+        {
+          "name": "sso_enabled",
+          "type": "boolean",
+          "nullable": true,
+          "description": "Indicates whether Single Sign-On is enabled. For v2 workspaces: true if SSO authentication policies exist. For v1 workspaces: true if claims records exist."
+        }
+      ]
+    },
+    {
+      "name": "ccs-aquila-tahoe-usersdimension",
+      "description": "Users Dimension Table containing user details, workspace associations, and activity metrics",
+      "columns": [
+        {
+          "name": "username",
+          "type": "varchar",
+          "nullable": false,
+          "description": "The email address of the user. This serves as a unique identifier for users within the system. Use this to connect user activity data across different services."
+        },
+        {
+          "name": "platform_customer_id",
+          "type": "varchar",
+          "nullable": true,
+          "description": "Workspace ID (from table AM Customer Users): This is unique identifier for each workspace in GLP."
+        },
+        {
+          "name": "user_id",
+          "type": "varchar",
+          "nullable": true,
+          "description": "User ID (from table AM Users)"
+        },
+        {
+          "name": "customer_user_type",
+          "type": "varchar",
+          "nullable": true,
+          "description": "User type under specific workspace (from table AM Customer User): the type of the user under specific workspace."
+        },
+        {
+          "name": "user_type",
+          "type": "varchar",
+          "nullable": true,
+          "description": "User type (from table AM Users): The type of the user, as recorded in the Account Management (AM) system. It includes federated or non-federated."
+        },
+        {
+          "name": "user_status",
+          "type": "varchar",
+          "nullable": true,
+          "description": "User status (from table AM Users): The status of the user, as recorded in the Account Management (AM) system. It includes verified/unverified."
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp",
+          "nullable": true,
+          "description": "Timestamp of user added into a specific workspace (from table AM Customer Users)."
+        },
+        {
+          "name": "users_created_at",
+          "type": "timestamp",
+          "nullable": true,
+          "description": "Timestamp of a user created in GLP (from AM Users). Note: each user will have single created timestamp, even it may under multiple workspaces."
+        },
+        {
+          "name": "last_login",
+          "type": "timestamp",
+          "nullable": true,
+          "description": "Timestamp of a user last log into GLP (from table AM Users). Note: this date is general date of log into GLP of each user regardless how many workspaces it associated."
+        },
+        {
+          "name": "accessed_at",
+          "type": "timestamp",
+          "nullable": true,
+          "description": "Timestamp indicating when the user accessed the system."
+        },
+        {
+          "name": "country_code",
+          "type": "varchar",
+          "nullable": true,
+          "description": "User address country code (from table AM User Contacts): The two-letter country code associated with the user's address."
+        },
+        {
+          "name": "language",
+          "type": "varchar",
+          "nullable": true,
+          "description": "User language (from table AM User Preferences): The language preference of the user."
+        },
+        {
+          "name": "is_test_user",
+          "type": "boolean",
+          "nullable": true,
+          "description": "True: the user is a test user; False: the user is a non-test user."
+        },
+        {
+          "name": "country",
+          "type": "varchar",
+          "nullable": true,
+          "description": "User country name: this field is derived from user's country_code."
+        },
+        {
+          "name": "company_region",
+          "type": "varchar",
+          "nullable": true,
+          "description": "User address country region: this field is derived from user's country_code."
+        },
+        {
+          "name": "company_subregion1",
+          "type": "varchar",
+          "nullable": true,
+          "description": "User country sub region 1: this field is derived from user's country_code (mapping logic came from sales team)."
+        },
+        {
+          "name": "company_subregion2",
+          "type": "varchar",
+          "nullable": true,
+          "description": "User country sub region 2: this field is derived from user's country_code (mapping logic came from sales team)."
+        },
+        {
+          "name": "company_subregion3",
+          "type": "varchar",
+          "nullable": true,
+          "description": "User country sub region 3: this field is derived from user's country_code (mapping logic came from sales team)."
+        },
+        {
+          "name": "customer_country_code",
+          "type": "varchar",
+          "nullable": true,
+          "description": "The country code associated with the customer, derived from customer contact information."
+        },
+        {
+          "name": "customer_country",
+          "type": "varchar",
+          "nullable": true,
+          "description": "The country name associated with the customer, mapped from the country code."
+        },
+        {
+          "name": "customer_country_region",
+          "type": "varchar",
+          "nullable": true,
+          "description": "The region classification of the customer's country, mapped from the country code."
+        },
+        {
+          "name": "customer_country_subregion1",
+          "type": "varchar",
+          "nullable": true,
+          "description": "The first subregion classification of the customer's country, mapped from the country code."
+        },
+        {
+          "name": "customer_country_subregion2",
+          "type": "varchar",
+          "nullable": true,
+          "description": "The second subregion classification of the customer's country, mapped from the country code."
+        },
+        {
+          "name": "customer_country_subregion3",
+          "type": "varchar",
+          "nullable": true,
+          "description": "The third subregion classification of the customer's country, mapped from the country code."
+        },
+        {
+          "name": "partition_date",
+          "type": "varchar",
+          "nullable": false,
+          "description": "Data snapshot date (yyyy-MM-DD). BI model is updated on daily basis."
+        },
+        {
+          "name": "user_access_count",
+          "type": "integer",
+          "nullable": true,
+          "description": "The number of distinct times the user accessed the platform on a respective day."
+        },
+        {
+          "name": "account_type",
+          "type": "varchar",
+          "nullable": true,
+          "description": "The type of account associated with the customer, such as STANDARD, MSP etc."
+        },
+        {
+          "name": "is_test_workspace",
+          "type": "boolean",
+          "nullable": true,
+          "description": "Indicates whether the customer is associated with a test workspace. True if test, false if non-test."
+        },
+        {
+          "name": "multi_fa_enabled",
+          "type": "boolean",
+          "nullable": true,
+          "description": "Indicates whether multi-factor authentication is enabled for the customer. True if enabled, false otherwise."
+        }
+      ]
+    },
+    {
+      "name": "ccs-aquila-tahoe-subscriptiondimension",
+      "description": "Subscription Dimension Table containing detailed subscription lifecycle, appointment, and product information",
+      "columns": [
+        {
+          "name": "subscription_key",
+          "type": "varchar",
+          "nullable": false,
+          "description": "Subscription key (from table SM subscription detail): the unique identifier for each subscription."
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp",
+          "nullable": true,
+          "description": "Timestamp of a subscription created (from table SM subscription detail)"
+        },
+        {
+          "name": "updated_at",
+          "type": "timestamp",
+          "nullable": true,
+          "description": "Timestamp of a subscription last updated (from table SM subscription detail)"
+        },
+        {
+          "name": "contract",
+          "type": "varchar",
+          "nullable": true,
+          "description": "Contract (from table SM subscription detail)"
+        },
+        {
+          "name": "end_user_name",
+          "type": "varchar",
+          "nullable": true,
+          "description": "End user name (from table SM subscription detail). Use this field with caution."
+        },
+        {
+          "name": "evaluation_type",
+          "type": "varchar",
+          "nullable": true,
+          "description": "Evaluation Type of subscription (from table SM subscription detail)."
+        },
+        {
+          "name": "invoicing_model",
+          "type": "varchar",
+          "nullable": true,
+          "description": "Invoicing Model (from table SM subscription detail)"
+        },
+        {
+          "name": "product_description",
+          "type": "varchar",
+          "nullable": true,
+          "description": "Product Description (from table SM subscription detail)"
+        },
+        {
+          "name": "product_sku",
+          "type": "varchar",
+          "nullable": true,
+          "description": "Product sku (from table SM subscription detail)"
+        },
+        {
+          "name": "quantity",
+          "type": "integer",
+          "nullable": true,
+          "description": "Quantity (from table SM subscription detail)"
+        },
+        {
+          "name": "quote",
+          "type": "varchar",
+          "nullable": true,
+          "description": "Quote (from table SM subscription detail)"
+        },
+        {
+          "name": "order_class",
+          "type": "varchar",
+          "nullable": true,
+          "description": "Order Class (from table SM subscription detail)"
+        },
+        {
+          "name": "product_type",
+          "type": "varchar",
+          "nullable": true,
+          "description": "Product Type (from table SM subscription detail)"
+        },
+        {
+          "name": "expiry_notification_date",
+          "type": "timestamp",
+          "nullable": true,
+          "description": "Timestamp of a subscription expiry notification date (from table SM subscription detail)"
+        },
+        {
+          "name": "expiry_ack_status",
+          "type": "boolean",
+          "nullable": true,
+          "description": "Expiry ack status: true or false (from table SM subscription detail)"
+        },
+        {
+          "name": "platform_customer_id",
+          "type": "varchar",
+          "nullable": true,
+          "description": "Workspace ID (from table SM Platform Customer)"
+        },
+        {
+          "name": "aas_type",
+          "type": "varchar",
+          "nullable": true,
+          "description": "AAS Type (from table SM subscription detail)"
+        },
+        {
+          "name": "po",
+          "type": "varchar",
+          "nullable": true,
+          "description": "Purchase order (from table SM subscription detail). Use this col with caution."
+        },
+        {
+          "name": "platform_customer_assigned_reason",
+          "type": "varchar",
+          "nullable": true,
+          "description": "Platform Customer Assigned Reason: This col can be used to determine ZTp or Manual. (from table SM subscription Detail)"
+        },
+        {
+          "name": "platform_customer_assigned_date",
+          "type": "timestamp",
+          "nullable": true,
+          "description": "Timestamp of a subscription assigned to workspace (from table SM Subscription Detail)"
+        },
+        {
+          "name": "resource_id",
+          "type": "varchar",
+          "nullable": true,
+          "description": "Resource ID (from table SM Subscription Detail)"
+        },
+        {
+          "name": "squid",
+          "type": "varchar",
+          "nullable": true,
+          "description": "Squid (from table SM Subscription Detail)"
+        },
+        {
+          "name": "on_prem_workspace_resource_id",
+          "type": "varchar",
+          "nullable": true,
+          "description": "On prem workspace resource ID (from table SM Subscription Detail)"
+        },
+        {
+          "name": "cancellation_date",
+          "type": "timestamp",
+          "nullable": true,
+          "description": "Timestamp of a subscription appointment cancellation (from table SM Appointment Detail)"
+        },
+        {
+          "name": "delayed_activation",
+          "type": "timestamp",
+          "nullable": true,
+          "description": "Timestamp of a subscription appointment delayed activation (from table SM Appointment Detail)"
+        },
+        {
+          "name": "lock_date",
+          "type": "timestamp",
+          "nullable": true,
+          "description": "Timestamp of a subscription appointment lock (from table SM Appointment Detail)"
+        },
+        {
+          "name": "reactivation_date",
+          "type": "timestamp",
+          "nullable": true,
+          "description": "Timestamp of a subscription appointment reactivation (from table SM Appointment Detail)"
+        },
+        {
+          "name": "subscription_end",
+          "type": "timestamp",
+          "nullable": true,
+          "description": "Timestamp of a subscription appointment end (from table SM Appointment Detail)"
+        },
+        {
+          "name": "subscription_start",
+          "type": "timestamp",
+          "nullable": true,
+          "description": "Timestamp of a subscription appointment start (from table SM Appointment Detail)"
+        },
+        {
+          "name": "suspension_date",
+          "type": "timestamp",
+          "nullable": true,
+          "description": "Timestamp of a subscription appointment suspension (from table SM Appointment Detail)"
+        },
+        {
+          "name": "auto_renewal_date",
+          "type": "timestamp",
+          "nullable": true,
+          "description": "Timestamp of a subscription appointment auto renewal (from table SM Appointment Detail)"
+        },
+        {
+          "name": "subscription_tier",
+          "type": "varchar",
+          "nullable": true,
+          "description": "Subscription tier (from table SM Subscription Tier)"
+        },
+        {
+          "name": "subscription_type",
+          "type": "varchar",
+          "nullable": true,
+          "description": "Subscription type (from table SM Subscription Tier). Used to determine BU. As of Apr2025: CENTRAL_STORAGE=Storage; CENTRAL_COMPUTE=Compute; OPSRAMP=OpsRamp; UXI*=UXI; Others=Aruba."
+        },
+        {
+          "name": "msp_platform_customer_id",
+          "type": "varchar",
+          "nullable": true,
+          "description": "Internal join key with table SM Platform Customer. Use with caution: join with SM Platform Customer for real msp ID, or tahoe-customersdimension using platform_customer_id."
+        },
+        {
+          "name": "state_type",
+          "type": "varchar",
+          "nullable": true,
+          "description": "State type of a subscription, derived from appointment dates. When state_type='started', the subscription is usually considered active."
+        },
+        {
+          "name": "is_test_workspace",
+          "type": "boolean",
+          "nullable": true,
+          "description": "Indicates whether the subscription is associated with a test workspace. True: test workspace; False: non-test workspace."
+        },
+        {
+          "name": "is_active",
+          "type": "boolean",
+          "nullable": true,
+          "description": "Indicates whether the subscription is currently active."
+        },
+        {
+          "name": "partition_date",
+          "type": "varchar",
+          "nullable": false,
+          "description": "Data snapshot date (yyyy-MM-DD). BI model is updated on daily basis."
+        },
+        {
+          "name": "total_quantity",
+          "type": "integer",
+          "nullable": true,
+          "description": "The total number of units or licenses available for the subscription."
+        },
+        {
+          "name": "assigned_device_count",
+          "type": "integer",
+          "nullable": true,
+          "description": "The number of devices currently assigned to the subscription."
+        },
+        {
+          "name": "available_quantity",
+          "type": "integer",
+          "nullable": true,
+          "description": "The number of units or licenses still available for assignment, calculated as total_quantity minus assigned_device_count (>= 0)."
+        },
+        {
+          "name": "has_tag",
+          "type": "boolean",
+          "nullable": true,
+          "description": "Indicates whether the subscription has associated tags. True if one or more tags exist, otherwise false."
+        }
+      ]
+    },
+    {
+      "name": "ccs-aquila-tahoe-devicedimension",
+      "description": "ADI Device Dimension Table containing inventory details and metadata",
+      "columns": [
+        {
+          "name": "serial_number",
+          "type": "varchar",
+          "nullable": false,
+          "description": "Serial number of device (from table ADI Device). Able to join with 'serial_number' from other tables in BI layer."
+        },
+        {
+          "name": "part_number",
+          "type": "varchar",
+          "nullable": true,
+          "description": "Part Number (from table ADI Device)"
+        },
+        {
+          "name": "platform_customer_id",
+          "type": "varchar",
+          "nullable": true,
+          "description": "Workspace ID of device (from table ADI Platform Customer)"
+        },
+        {
+          "name": "mac_address",
+          "type": "varchar",
+          "nullable": true,
+          "description": "Mac Address (from table ADI Device)"
+        },
+        {
+          "name": "ip_address",
+          "type": "varchar",
+          "nullable": true,
+          "description": "Ip address (from table ADI Device)"
+        },
+        {
+          "name": "device_type",
+          "type": "varchar",
+          "nullable": true,
+          "description": "Device type (from table ADI Device)"
+        },
+        {
+          "name": "device_model",
+          "type": "varchar",
+          "nullable": true,
+          "description": "Device model (from table ADI Device)"
+        },
+        {
+          "name": "is_archived",
+          "type": "boolean",
+          "nullable": true,
+          "description": "Is_archived: true or false (from table ADI Device)"
+        },
+        {
+          "name": "device_claim_type",
+          "type": "varchar",
+          "nullable": true,
+          "description": "Claim type of device (from table ADI Device)"
+        },
+        {
+          "name": "platform_subscription_category",
+          "type": "varchar",
+          "nullable": true,
+          "description": "Platform Subscription Category (from table ADI Device). As of Mar2025, there are 3 types: PROLIANT, ALLETRA_4k, ALLETRA or missing."
+        },
+        {
+          "name": "iaas",
+          "type": "boolean",
+          "nullable": true,
+          "description": "Iaas: true or false (from table ADI Device)"
+        },
+        {
+          "name": "gts_status",
+          "type": "varchar",
+          "nullable": true,
+          "description": "Gts status (from table ADI Device)"
+        },
+        {
+          "name": "location_id",
+          "type": "varchar",
+          "nullable": true,
+          "description": "Location ID (from table ADI Device)"
+        },
+        {
+          "name": "entitlement_id",
+          "type": "varchar",
+          "nullable": true,
+          "description": "Entitlement ID (from table ADI Device)"
+        },
+        {
+          "name": "indent_level",
+          "type": "integer",
+          "nullable": true,
+          "description": "Indent level (from table ADI Device)"
+        },
+        {
+          "name": "created_at",
+          "type": "timestamp",
+          "nullable": true,
+          "description": "Timestamp of the device added into inventory"
+        },
+        {
+          "name": "is_active",
+          "type": "boolean",
+          "nullable": true,
+          "description": "Is Active flag: true or false. The definition of active/non-active device came from Platform Performance Metrics definition."
+        },
+        {
+          "name": "application_id",
+          "type": "varchar",
+          "nullable": true,
+          "description": "Application ID of the device provisioning (from table ADI Application Customer)"
+        },
+        {
+          "name": "application_instance_id",
+          "type": "varchar",
+          "nullable": true,
+          "description": "Application Instance ID of the device provisioning (from table ADI Application Customer)"
+        },
+        {
+          "name": "application_customer_id",
+          "type": "varchar",
+          "nullable": true,
+          "description": "Application Customer ID of the device provisioning (from table ADI Application Customer)"
+        },
+        {
+          "name": "has_tag",
+          "type": "boolean",
+          "nullable": true,
+          "description": "Indicates whether the device has any associated tags. true if one or more tags exist, otherwise false."
+        },
+        {
+          "name": "is_test_workspace",
+          "type": "boolean",
+          "nullable": true,
+          "description": "Indicates whether the workspace associated with the device is a test environment (True = test workspace, False = non-test)."
+        },
+        {
+          "name": "partition_date",
+          "type": "varchar",
+          "nullable": false,
+          "description": "Data snapshot date (yyyy-MM-DD). BI model is updated on daily basis."
+        }
+      ]
+    },
+    {
+      "name": "ccs-aquila-tahoe-devicesubscriptiondimension",
+      "description": "Device Subscription Dimension Table containing subscription details linked to devices",
+      "columns": [
+        {
+          "name": "subscription_key",
+          "type": "varchar",
+          "nullable": false,
+          "description": "Subscription key (from table SM subscription detail): the unique identifier for each subscription."
+        },
+        {
+          "name": "evaluation_type",
+          "type": "varchar",
+          "nullable": true,
+          "description": "Evaluation Type of subscription (from table SM subscription detail): Eval - trial, None - paid"
+        },
+        {
+          "name": "platform_customer_id",
+          "type": "varchar",
+          "nullable": true,
+          "description": "Workspace ID of subscription (from table SM Platform Customer): the workspace id associated with each subscription."
+        },
+        {
+          "name": "subscription_type",
+          "type": "varchar",
+          "nullable": true,
+          "description": "Subscription type (from table SM Subscription Tier)"
+        },
+        {
+          "name": "mac_address",
+          "type": "varchar",
+          "nullable": true,
+          "description": "Mac address of device (from table SM Device)"
+        },
+        {
+          "name": "part_number",
+          "type": "varchar",
+          "nullable": true,
+          "description": "Part number of device (from table SM Device)"
+        },
+        {
+          "name": "serial_number",
+          "type": "varchar",
+          "nullable": true,
+          "description": "Serial number of device (from table SM Device)"
+        },
+        {
+          "name": "application_id",
+          "type": "varchar",
+          "nullable": true,
+          "description": "Application ID of the device provisioning (from table SM Application Customer)"
+        },
+        {
+          "name": "application_customer_id",
+          "type": "varchar",
+          "nullable": true,
+          "description": "Application Customer ID of the device provisioning (from table SM Application Customer)"
+        },
+        {
+          "name": "application_instance_id",
+          "type": "varchar",
+          "nullable": true,
+          "description": "Application Instance ID of the device provisioning (from table SM Application Customer)"
+        },
+        {
+          "name": "is_test_workspace",
+          "type": "boolean",
+          "nullable": true,
+          "description": "Indicates whether the workspace associated with the device is a test environment. True: test workspace; False: non-test workspace."
+        },
+        {
+          "name": "partition_date",
+          "type": "varchar",
+          "nullable": false,
+          "description": "Data snapshot date (yyyy-MM-DD). BI model is updated on daily basis."
+        },
+        {
+          "name": "device_type",
+          "type": "varchar",
+          "nullable": true,
+          "description": "Indicates the category of the device, such as STORAGE, COMPUTE, ARUBA, UXI, or OTHERS"
+        },
+        {
+          "name": "ccs_region",
+          "type": "varchar",
+          "nullable": true,
+          "description": "Common Cloud Services (CCS) region where the platform customer account is registered. Sourced from sm_platform_customer table."
+        }
+      ]
+    },
+    {
+      "name": "ccs-aquila-tahoe-provisionbycustomersdimension",
+      "description": "Provision By Customers Dimension Table containing customer provisioning details",
+      "columns": [
+        {
+          "name": "application_customer_id",
+          "type": "varchar",
+          "nullable": false,
+          "description": "Application customer ID (from table AM Customers): The application customer ID of the workspace, as recorded in the Account Management (AM) system."
+        },
+        {
+          "name": "platform_customer_id",
+          "type": "varchar",
+          "nullable": true,
+          "description": "Workspace ID (from table AM Customers): This is unique identifier for each workspace in GLP."
+        },
+        {
+          "name": "application_id",
+          "type": "varchar",
+          "nullable": true,
+          "description": "Application ID (from table AM Customers): The application ID that the workspace is currently provisioning, as recorded in the Account Management (AM) system."
+        },
+        {
+          "name": "application_instance_id",
+          "type": "varchar",
+          "nullable": true,
+          "description": "Application instance ID (from table AM Customers): The application instances ID that the workspace is currently provisioning, as recorded in the Account Management (AM) system."
+        },
+        {
+          "name": "account_type",
+          "type": "varchar",
+          "nullable": true,
+          "description": "Indicates the type of account associated with the provisioned customer, such as STANDARD, MSP etc."
+        },
+        {
+          "name": "is_test_workspace",
+          "type": "boolean",
+          "nullable": true,
+          "description": "Indicates whether the provisioned customer is associated with a test workspace. True: test workspace; False: production or non-test workspace."
+        },
+        {
+          "name": "partition_date",
+          "type": "varchar",
+          "nullable": false,
+          "description": "Data snapshot date (yyyy-MM-DD). BI model is updated on daily basis. Use this col to filter most recent data or identify trends."
+        },
+        {
+          "name": "region",
+          "type": "varchar",
+          "nullable": true,
+          "description": "Geographic region assigned to the application customer in the system. Indicates the CCS region where this application instance is deployed."
+        }
+      ]
+    },
+    {
+      "name": "ccs-aquila-tahoe-userpreferencesdimension",
+      "description": "User preferences dimension table",
+      "columns": [
+        {
+          "name": "user_name",
+          "type": "varchar",
+          "nullable": false,
+          "description": "The unique identifier or name of the user"
+        },
+        {
+          "name": "workspace_id",
+          "type": "varchar",
+          "nullable": true,
+          "description": "The ID of the workspace associated with the user preference"
+        },
+        {
+          "name": "category",
+          "type": "varchar",
+          "nullable": true,
+          "description": "The category or grouping of the user preference"
+        },
+        {
+          "name": "preference_level",
+          "type": "varchar",
+          "nullable": true,
+          "description": "The level at which the preference is set"
+        },
+        {
+          "name": "preference",
+          "type": "varchar",
+          "nullable": true,
+          "description": "The specific preference value or setting"
+        },
+        {
+          "name": "partition_date",
+          "type": "varchar",
+          "nullable": true,
+          "description": "Data snapshot date"
+        }
+      ]
+    }
+  ],
+  "business_logic": {
+    "joins": [
+      {
+        "description": "Join customersdimension and subscriptiondimension",
+        "join_condition": "`customersdimension`.`platform_customer_id` = `subscriptiondimension`.`platform_customer_id`"
+      },
+      {
+        "description": "Join usersdimension and customersdimension",
+        "join_condition": "`usersdimension`.`platform_customer_id` = `customersdimension`.`platform_customer_id`"
+      },
+      {
+        "description": "Join devicedimension and customersdimension",
+        "join_condition": "`devicedimension`.`platform_customer_id` = `customersdimension`.`platform_customer_id`"
+      },
+      {
+        "description": "Join subscriptiondimension and devicesubscriptiondimension",
+        "join_condition": "`subscriptiondimension`.`subscription_key` = `devicesubscriptiondimension`.`subscription_key`"
+      },
+      {
+        "description": "Join customersdimension and devicesubscriptiondimension",
+        "join_condition": "`customersdimension`.`platform_customer_id` = `devicesubscriptiondimension`.`platform_customer_id`"
+      },
+      {
+        "description": "Join devicedimension and devicesubscriptiondimension",
+        "join_condition": "`devicedimension`.`serial_number` = `devicesubscriptiondimension`.`serial_number`"
+      }
+    ],
+    "definitions": {
+      "test_user": "A user is considered a 'test user' if their email domain is in the manually maintained list of test domains. Otherwise, they are a 'non-test user'.",
+      "test_domains": [
+        "glcptest.com",
+        "esc-std.glcpsoltest.net",
+        "hpe.com",
+        "hpe.hr",
+        "hpecds.com",
+        "hpedemos.com",
+        "hpedemos.net",
+        "hpedev.io",
+        "hpelabsonline.com",
+        "hpevlabs.net",
+        "groups.ext.hpe.com",
+        "merlin.test.glc.hpe.com",
+        "recovery.auth.greenlake.hpe.com",
+        "testhpe.com",
+        "aruba-expert.com",
+        "aruba-workbench.com",
+        "aruba.flane.de",
+        "arubademo.net",
+        "arubanetworks.com",
+        "arubatraininglabs.net",
+        "arubaworkshops.net",
+        "gmail.com",
+        "yahoo.co.in",
+        "yahoo.co.uk",
+        "yahoo.com",
+        "yahoo.com.mx",
+        "outlook.com",
+        "outlook.com.br",
+        "outlook.dk",
+        "outlook.es",
+        "outlook.fr",
+        "hotmail.co.uk",
+        "hotmail.com",
+        "hotmail.de",
+        "hotmail.fr",
+        "126.com"
+      ],
+      "test_workspace": "A workspace is a 'test workspace' if all users associated with it are 'test users'. If it has at least one 'non-test user', it is considered a 'non-test workspace'.",
+      "active_workspace": "A workspace is considered active if it has at least one active subscription or at least one active device, and is provisioned on the corresponding application.",
+      "active_subscription": "An 'active subscription' is one where the 'state_type' in the 'subscriptiondimension' table is 'started'.",
+      "subscription_state": "The state is derived from date columns in a specific order of precedence. The logic first checks for terminal states ('suspended', 'cancelled', 'locked', 'ended') and pre-activation states ('none'). If a subscription is not in any of these states, it is considered 'started'.",
+      "business_unit": "The Business Unit is derived from the 'subscription_type' column. Specific values map to Storage ('CENTRAL_STORAGE'), Compute ('CENTRAL_COMPUTE'), and OpsRamp ('OPSRAMP'). Types starting with 'UXI' are classified as UXI, and all others are defaulted to Aruba.",
+      "active_device": "An 'active device' is indicated by the 'is_active' flag in the 'devicedimension' table being true and 'is_archived' being false."
+    }
+  }
+}
