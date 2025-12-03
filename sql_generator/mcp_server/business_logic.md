@@ -3,16 +3,62 @@
 You MUST use the following Common Table Expressions (CTEs) to start your query. These CTEs define the core business entities and logic.
 
 ```sql
-WITH dsdefinedacct as
-     (select platform_customer_id,
-             account_type,
-             case
-             	 when is_test_workspace = true then 'Test Workspace'
-             	 when is_test_workspace = false then 'non Test Workspace'
-               when is_test_workspace is null then 'Test Workspace'
-             end as if_test_workspace
-      from "ccs-aquila-tahoe-customersdimension" c 
-      WHERE partition_date = FORMAT_DATETIME(CURRENT_DATE - INTERVAL '1' DAY, 'yyyy-MM-dd') ),
+WITH nontest_user AS
+     (SELECT customer_id,
+             lower(username) AS username,
+             split(lower(username), '@')[2] AS user_email_domain
+      FROM "ccs-aquila-louise-accountmanagement-customerusers"
+      WHERE split(lower(username), '@')[2] NOT IN ('glcptest.com',
+                                                   'esc-std.glcpsoltest.net',
+                                                   'hpe.com',
+                                                   'hpe.hr',
+                                                   'hpecds.com',
+                                                   'hpedemos.com',
+                                                   'hpedemos.net',
+                                                   'hpedev.io',
+                                                   'hpelabsonline.com',
+                                                   'hpevlabs.net',
+                                                   'groups.ext.hpe.com',
+                                                   'merlin.test.glc.hpe.com',
+                                                   'recovery.auth.greenlake.hpe.com',
+                                                   'testhpe.com',
+                                                   'aruba-expert.com',
+                                                   'aruba-workbench.com',
+                                                   'aruba.flane.de',
+                                                   'arubademo.net',
+                                                   'arubanetworks.com',
+                                                   'arubatraininglabs.net',
+                                                   'arubaworkshops.net',
+                                                   'gmail.com',
+                                                   'yahoo.co.in',
+                                                   'yahoo.co.uk',
+                                                   'yahoo.com',
+                                                   'yahoo.com.mx',
+                                                   'outlook.com',
+                                                   'outlook.com.br',
+                                                   'outlook.dk',
+                                                   'outlook.es',
+                                                   'outlook.fr',
+                                                   'hotmail.co.uk',
+                                                   'hotmail.com',
+                                                   'hotmail.de',
+                                                   'hotmail.fr',
+                                                   '126.com') ),
+
+nontest_customer AS
+     (SELECT DISTINCT customer_id,
+                      'non Test Workspace' AS if_test_workspace
+      FROM nontest_user),
+
+dsdefinedacct AS
+     (SELECT c.customer_id AS platform_customer_id,
+             c.msp_id,
+             c.account_type,
+             c.account_status,
+             COALESCE(nc.if_test_workspace, 'Test Workspace') AS if_test_workspace
+      FROM "ccs-aquila-louise-accountmanagement-customers" c
+      LEFT JOIN nontest_customer nc ON c.customer_id = nc.customer_id
+      WHERE c.platform_customer_id = 'PLATFORM_ACCOUNT' ),
 
 customers_auth AS
      (SELECT customer_id AS platform_customer_id,
@@ -85,3 +131,10 @@ active_dev as
 1.  **ALWAYS** start your query by copying the CTEs above exactly as they are.
 2.  Then, write your final `SELECT` statement querying from `active_dev` or other CTEs as needed.
 3.  Filter by `if_test_workspace = 'non Test Workspace'` unless requested otherwise.
+
+## Additional Definitions & Rules
+- **Active Workspace**: A workspace is considered active if it has at least one active subscription or at least one active device, and is provisioned on the corresponding application.
+- **Active Subscription**: An 'active subscription' is one where the `state_type` in the `subscriptiondimension` table is 'started'.
+- **Subscription State**: The state is derived from date columns. If a subscription is not in 'suspended', 'cancelled', 'locked', 'ended', or 'none', it is considered 'started'.
+- **Business Unit**: Derived from `subscription_type`. 'CENTRAL_STORAGE' -> Storage, 'CENTRAL_COMPUTE' -> Compute, 'OPSRAMP' -> OpsRamp, 'UXI*' -> UXI, Others -> Aruba.
+- **Active Device**: An 'active device' is indicated by the `is_active` flag in the `devicedimension` table being `true` and `is_archived` being `false`.

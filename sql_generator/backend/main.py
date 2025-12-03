@@ -19,12 +19,26 @@ agent = SQLAgent()
 
 class QueryRequest(BaseModel):
     query: str
+    history: list = []
+
+class FeedbackRequest(BaseModel):
+    query: str
+    sql: str
+    rating: str  # "Good" or "Bad"
 
 @app.post("/api/generate_sql")
 async def generate_sql(request: QueryRequest):
     try:
-        sql = await agent.generate_sql(request.query)
+        sql = await agent.generate_sql(request.query, request.history)
         return {"sql": sql}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/feedback")
+async def save_feedback(request: FeedbackRequest):
+    try:
+        agent.save_feedback(request.query, request.sql, request.rating)
+        return {"status": "success"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

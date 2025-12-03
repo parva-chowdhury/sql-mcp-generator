@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { generateSQL } from './api';
+import { generateSQL, sendFeedback } from './api';
 import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
 import sql from 'react-syntax-highlighter/dist/esm/languages/hljs/sql';
 import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
@@ -10,8 +10,15 @@ SyntaxHighlighter.registerLanguage('sql', sql);
 function App() {
   const [query, setQuery] = useState('');
   const [sqlResult, setSqlResult] = useState('');
+  const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  const handleFeedback = async (rating) => {
+    if (!sqlResult) return;
+    await sendFeedback(query, sqlResult, rating);
+    alert(`Thanks for your feedback! (${rating})`);
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -20,13 +27,27 @@ function App() {
     setSqlResult('');
 
     try {
-      const result = await generateSQL(query);
+      // Send current history + new query
+      const result = await generateSQL(query, history);
       setSqlResult(result);
+
+      // Update history with new interaction
+      setHistory(prev => [
+        ...prev,
+        { role: 'user', content: query },
+        { role: 'assistant', content: result }
+      ]);
     } catch (err) {
       setError('Failed to generate SQL. Please try again.');
     } finally {
       setLoading(false);
     }
+  };
+
+  const clearHistory = () => {
+    setHistory([]);
+    setSqlResult('');
+    setQuery('');
   };
 
   return (
@@ -62,12 +83,32 @@ function App() {
                 {sqlResult}
               </SyntaxHighlighter>
             </div>
-            <button
-              className="copy-btn"
-              onClick={() => navigator.clipboard.writeText(sqlResult)}
-            >
-              Copy to Clipboard
-            </button>
+
+            <div className="action-buttons">
+              <button
+                className="copy-btn"
+                onClick={() => navigator.clipboard.writeText(sqlResult)}
+              >
+                Copy to Clipboard
+              </button>
+
+              <div className="feedback-buttons">
+                <button
+                  onClick={() => handleFeedback('Good')}
+                  className="feedback-btn good"
+                  title="Good Response"
+                >
+                  👍
+                </button>
+                <button
+                  onClick={() => handleFeedback('Bad')}
+                  className="feedback-btn bad"
+                  title="Bad Response"
+                >
+                  👎
+                </button>
+              </div>
+            </div>
           </div>
         )}
       </main>
