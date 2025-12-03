@@ -131,22 +131,56 @@ IMPORTANT:
                 sql_response = sql_response.split("```")[1].split("```")[0].strip()
 
             # --- CTE INJECTION LOGIC (OPTIMIZED) ---
+            # --- CTE INJECTION LOGIC (OPTIMIZED) ---
             # Extract standard CTEs from rules
-            standard_ctes = ""
             if "```sql" in rules:
-                standard_ctes = rules.split("```sql")[1].split("```")[0].strip()
-            
-            if standard_ctes:
-                print("--- PREPENDING STANDARD CTES ---")
+                raw_ctes = rules.split("```sql")[1].split("```")[0].strip()
+                # Remove 'WITH' prefix
+                if raw_ctes.upper().startswith("WITH"):
+                    raw_ctes = raw_ctes[4:].strip()
+
+                # Parse individual CTEs (Hardcoded for known structure)
+                ctes = {}
                 
-                # If generated SQL starts with WITH, merge
-                if sql_response.upper().startswith("WITH"):
-                    # Remove 'WITH' from generated SQL and prepend standard CTEs + comma
-                    generated_ctes = sql_response[4:].strip()
-                    sql_response = f"{standard_ctes},\n{generated_ctes}"
-                else:
-                    # Just prepend standard CTEs
-                    sql_response = f"{standard_ctes}\n{sql_response}"
+                # Find active_dev start
+                dev_start = raw_ctes.find("active_dev as")
+                
+                if dev_start != -1:
+                    # active_sub is everything before active_dev
+                    sub_def = raw_ctes[:dev_start].strip()
+                    if sub_def.endswith(","):
+                        sub_def = sub_def[:-1]
+                    ctes['active_sub'] = sub_def
+                    
+                    # active_dev is everything from start
+                    ctes['active_dev'] = raw_ctes[dev_start:].strip()
+
+                # Determine which to include based on usage in SQL response
+                needed_ctes = []
+                
+                # Check for active_sub usage
+                if "active_sub" in sql_response:
+                    needed_ctes.append(ctes.get('active_sub', ''))
+                    
+                # Check for active_dev usage
+                if "active_dev" in sql_response:
+                    needed_ctes.append(ctes.get('active_dev', ''))
+                
+                # Filter out empty strings
+                needed_ctes = [cte for cte in needed_ctes if cte]
+
+                if needed_ctes:
+                    print(f"--- PREPENDING CTES: {len(needed_ctes)} found ---")
+                    cte_string = ",\n\n".join(needed_ctes)
+                    
+                    # If generated SQL starts with WITH, merge
+                    if sql_response.upper().startswith("WITH"):
+                        # Remove 'WITH' from generated SQL
+                        generated_ctes = sql_response[4:].strip()
+                        sql_response = f"WITH {cte_string},\n{generated_ctes}"
+                    else:
+                        # Just prepend standard CTEs
+                        sql_response = f"WITH {cte_string}\n{sql_response}"
             # ---------------------------
                 
             return sql_response
