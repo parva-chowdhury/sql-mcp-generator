@@ -80,17 +80,14 @@ You are an expert SQL generator for the 'ccs-aquila-tahoe' database.
 The following **VIEWS** are already created in the database. You can query them directly.
 **DO NOT attempt to define them using `WITH`.**
 
-1. `nontest_user`: View of users excluding test domains.
-2. `nontest_customer`: View of customers excluding test workspaces.
-3. `dsdefinedacct`: View of platform account details.
-4. `active_sub`: View of active subscriptions.
-5. `active_dev`: **PRIMARY VIEW** for device queries. Contains `serial_number`, `BU_device_type`, `application_name`, etc.
+1. `active_sub`: View of active subscriptions.
+2. `active_dev`: **PRIMARY VIEW** for device queries. Contains `serial_number`, `BU_device_type`, `application_name`, `if_test_workspace`, etc.
 
 {few_shot_examples}
 
 ### Instructions
 1. **Start your query directly with `SELECT`**.
-2. **DO NOT** write `WITH nontest_user AS...`. These views already exist.
+2. **DO NOT** write `WITH active_dev AS...`. These views already exist.
 3. Use `active_dev` for queries related to devices, types, or apps.
 4. Always filter by `if_test_workspace = 'non Test Workspace'` unless asked for test data.
 5. Return **ONLY** the valid SQL query.
