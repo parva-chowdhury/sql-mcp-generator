@@ -1,8 +1,8 @@
 {
-  "database": "ccs-aquila-tahoe",
+  "database": "ccs-mira-tahoe",
   "tables": [
     {
-      "name": "ccs-aquila-tahoe-customersdimension",
+      "name": "ccs-mira-tahoe-customersdimension_latest",
       "description": "Customers Dimension Table containing workspace and account details from the Account Management (AM) system",
       "columns": [
         {
@@ -182,7 +182,7 @@
       ]
     },
     {
-      "name": "ccs-aquila-tahoe-usersdimension",
+      "name": "ccs-mira-tahoe-usersdimension_latest",
       "description": "Users Dimension Table containing user details, workspace associations, and activity metrics",
       "columns": [
         {
@@ -362,7 +362,7 @@
       ]
     },
     {
-      "name": "ccs-aquila-tahoe-subscriptiondimension",
+      "name": "ccs-mira-tahoe-subscriptiondimension_latest",
       "description": "Subscription Dimension Table containing detailed subscription lifecycle, appointment, and product information",
       "columns": [
         {
@@ -620,7 +620,7 @@
       ]
     },
     {
-      "name": "ccs-aquila-tahoe-devicedimension",
+      "name": "ccs-mira-tahoe-devicedimension_latest",
       "description": "ADI Device Dimension Table containing inventory details and metadata",
       "columns": [
         {
@@ -764,7 +764,7 @@
       ]
     },
     {
-      "name": "ccs-aquila-tahoe-devicesubscriptiondimension",
+      "name": "ccs-mira-tahoe-devicesubscriptiondimension_latest",
       "description": "Device Subscription Dimension Table containing subscription details linked to devices",
       "columns": [
         {
@@ -854,7 +854,7 @@
       ]
     },
     {
-      "name": "ccs-aquila-tahoe-provisionbycustomersdimension",
+      "name": "ccs-mira-tahoe-provisionbycustomersdimension_latest",
       "description": "Provision By Customers Dimension Table containing customer provisioning details",
       "columns": [
         {
@@ -908,7 +908,7 @@
       ]
     },
     {
-      "name": "ccs-aquila-tahoe-userpreferencesdimension",
+      "name": "ccs-mira-tahoe-userpreferencesdimension_latest",
       "description": "User preferences dimension table",
       "columns": [
         {
@@ -953,27 +953,27 @@
   "business_logic": {
     "joins": [
       {
-        "description": "Join customersdimension and subscriptiondimension",
+        "description": "Join customersdimension and subscriptiondimension_latest",
         "join_condition": "`customersdimension`.`platform_customer_id` = `subscriptiondimension`.`platform_customer_id`"
       },
       {
-        "description": "Join usersdimension and customersdimension",
+        "description": "Join usersdimension and customersdimension_latest",
         "join_condition": "`usersdimension`.`platform_customer_id` = `customersdimension`.`platform_customer_id`"
       },
       {
-        "description": "Join devicedimension and customersdimension",
+        "description": "Join devicedimension and customersdimension_latest",
         "join_condition": "`devicedimension`.`platform_customer_id` = `customersdimension`.`platform_customer_id`"
       },
       {
-        "description": "Join subscriptiondimension and devicesubscriptiondimension",
+        "description": "Join subscriptiondimension and devicesubscriptiondimension_latest",
         "join_condition": "`subscriptiondimension`.`subscription_key` = `devicesubscriptiondimension`.`subscription_key`"
       },
       {
-        "description": "Join customersdimension and devicesubscriptiondimension",
+        "description": "Join customersdimension and devicesubscriptiondimension_latest",
         "join_condition": "`customersdimension`.`platform_customer_id` = `devicesubscriptiondimension`.`platform_customer_id`"
       },
       {
-        "description": "Join devicedimension and devicesubscriptiondimension",
+        "description": "Join devicedimension and devicesubscriptiondimension_latest",
         "join_condition": "`devicedimension`.`serial_number` = `devicesubscriptiondimension`.`serial_number`"
       }
     ],

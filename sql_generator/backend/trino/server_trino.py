@@ -1,5 +1,5 @@
 from mcp.server.fastmcp import FastMCP
-from mcp_server.melody_trino.trino_connection import (
+from trino_connection import (
     listing_assets,
     get_describe_asset,
     execute_sql_query,
@@ -12,33 +12,33 @@ mcp = FastMCP("PATrinoConnection")
 # ============================================================
 # Tool 1: list_assets(schema)
 # ============================================================
-@mcp.tool()
-async def list_assets(schema: str) -> str:
-    """
-    List dataset assets for given schema.
-    """
-    try:
-        melody = new_melody_client().create()
-        assets = listing_assets(melody, schema)
-        return {"assets": assets}
-    except Exception as e:
-        return {"error": str(e)}
+# @mcp.tool()
+# async def list_assets(schema: str) -> str:
+#     """
+#     List dataset assets for given schema.
+#     """
+#     try:
+#         melody = new_melody_client().create()
+#         assets = listing_assets(melody, schema)
+#         return {"assets": assets}
+#     except Exception as e:
+#         return {"error": str(e)}
 
 
 # ============================================================
 # Tool 2: describe_asset(schema, table)
 # ============================================================
-@mcp.tool()
-async def describe_asset(schema: str, table: str) -> str:
-    """
-    Describe a specific asset (return fields & types).
-    """
-    try:
-        melody = new_melody_client().create()
-        result = get_describe_asset(melody, schema, table)
-        return result
-    except Exception as e:
-        return {"error": str(e)}
+# @mcp.tool()
+# async def describe_asset(schema: str, table: str) -> str:
+#     """
+#     Describe a specific asset (return fields & types).
+#     """
+#     try:
+#         melody = new_melody_client().create()
+#         result = get_describe_asset(melody, schema, table)
+#         return result
+#     except Exception as e:
+#         return {"error": str(e)}
 
 
 # ============================================================
