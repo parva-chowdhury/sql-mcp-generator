@@ -1,8 +1,8 @@
 {
-  "database": "ccs-aquila-tahoe",
+  "database": "ccs-mira-tahoe",
   "tables": [
     {
-      "name": "ccs-aquila-tahoe-customersdimension",
+      "name": "ccs-mira-tahoe-customersdimension",
       "description": "Customers Dimension Table containing workspace and account details from the Account Management (AM) system",
       "columns": [
         {
@@ -182,7 +182,7 @@
       ]
     },
     {
-      "name": "ccs-aquila-tahoe-usersdimension",
+      "name": "ccs-mira-tahoe-usersdimension",
       "description": "Users Dimension Table containing user details, workspace associations, and activity metrics",
       "columns": [
         {
@@ -362,7 +362,7 @@
       ]
     },
     {
-      "name": "ccs-aquila-tahoe-subscriptiondimension",
+      "name": "ccs-mira-tahoe-subscriptiondimension",
       "description": "Subscription Dimension Table containing detailed subscription lifecycle, appointment, and product information",
       "columns": [
         {
@@ -620,7 +620,7 @@
       ]
     },
     {
-      "name": "ccs-aquila-tahoe-devicedimension",
+      "name": "ccs-mira-tahoe-devicedimension",
       "description": "ADI Device Dimension Table containing inventory details and metadata",
       "columns": [
         {
@@ -764,7 +764,7 @@
       ]
     },
     {
-      "name": "ccs-aquila-tahoe-devicesubscriptiondimension",
+      "name": "ccs-mira-tahoe-devicesubscriptiondimension",
       "description": "Device Subscription Dimension Table containing subscription details linked to devices",
       "columns": [
         {

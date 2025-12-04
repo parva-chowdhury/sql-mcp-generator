@@ -12,6 +12,16 @@ export const generateSQL = async (query, history = []) => {
     }
 };
 
+export const executeSQL = async (sql) => {
+    try {
+        const response = await axios.post(`${API_URL}/execute_sql`, { sql });
+        return response.data;
+    } catch (error) {
+        console.error('Error executing SQL:', error);
+        throw error;
+    }
+};
+
 export const sendFeedback = async (query, sql, rating) => {
     try {
         await axios.post(`${API_URL}/feedback`, { query, sql, rating });

@@ -5,28 +5,24 @@ You MUST use the following Common Table Expressions (CTEs) to start your query. 
 ```sql
 WITH active_sub as
      (select subscription_key, platform_customer_id
-      from "ccs-aquila-tahoe-subscriptiondimension"
-      where partition_date = FORMAT_DATETIME(CURRENT_DATE - INTERVAL '1' DAY, 'yyyy-MM-dd')
-      	and state_type = 'started'
+      from columnar."hybrid:pa-load"."ccs-mira-tahoe-subscriptiondimension_latest"
+      where state_type = 'started'
         and subscription_type != 'OPSRAMP'
         and quantity < 10000000 ),
 
 active_dev as
-     (select workspace_auth_version,
-             case
-                 when is_test_workspace = true then 'Test Workspace'
-                 when is_test_workspace = false then 'non Test Workspace'
+     (select case
+                 when is_test_workspace = 1 then 'Test Workspace'
+                 when is_test_workspace = 0 then 'non Test Workspace'
                  when is_test_workspace is null then 'Test Workspace'
              end as if_test_workspace,
              serial_number,
-             account_type,
-             BU_device_type,
-             app_id,
-             application_name
-      from "ccs-aquila-tahoe-devicedimension"
+             device_type as BU_device_type,
+             application_id as app_id,
+             is_active
+      from columnar."hybrid:pa-load"."ccs-mira-tahoe-devicedimension_latest"
       where is_active = true 
-        and is_archived = false
-        and partition_date = FORMAT_DATETIME(CURRENT_DATE - INTERVAL '1' DAY, 'yyyy-MM-dd'))
+        and is_archived = false)
 ```
 
 ## Usage Instructions

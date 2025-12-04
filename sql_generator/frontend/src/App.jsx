@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { generateSQL, sendFeedback } from './api';
+import { generateSQL, sendFeedback, executeSQL } from './api';
 import { Light as SyntaxHighlighter } from 'react-syntax-highlighter';
 import sql from 'react-syntax-highlighter/dist/esm/languages/hljs/sql';
 import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
@@ -12,6 +12,8 @@ function App() {
   const [sqlResult, setSqlResult] = useState('');
   const [history, setHistory] = useState([]);
   const [loading, setLoading] = useState(false);
+  const [executing, setExecuting] = useState(false);
+  const [executionResult, setExecutionResult] = useState(null);
   const [error, setError] = useState('');
 
   const handleFeedback = async (rating) => {
@@ -20,11 +22,28 @@ function App() {
     alert(`Thanks for your feedback! (${rating})`);
   };
 
+  const handleExecute = async () => {
+    if (!sqlResult) return;
+    setExecuting(true);
+    setExecutionResult(null);
+    try {
+      const result = await executeSQL(sqlResult);
+      setExecutionResult(result);
+    } catch (err) {
+      console.error("Execution error:", err);
+      const errorMessage = err.response?.data?.detail || err.message || 'Failed to execute SQL.';
+      setError(`Execution Failed: ${errorMessage}`);
+    } finally {
+      setExecuting(false);
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError('');
     setSqlResult('');
+    setExecutionResult(null);
 
     try {
       // Send current history + new query
@@ -48,6 +67,7 @@ function App() {
     setHistory([]);
     setSqlResult('');
     setQuery('');
+    setExecutionResult(null);
   };
 
   return (
@@ -92,6 +112,14 @@ function App() {
                 Copy to Clipboard
               </button>
 
+              <button
+                className="execute-btn"
+                onClick={handleExecute}
+                disabled={executing}
+              >
+                {executing ? 'Executing...' : '▶ Run Query'}
+              </button>
+
               <div className="feedback-buttons">
                 <button
                   onClick={() => handleFeedback('Good')}
@@ -109,6 +137,35 @@ function App() {
                 </button>
               </div>
             </div>
+          </div>
+        )}
+
+        {executionResult && (
+          <div className="execution-result">
+            <h2>Query Results</h2>
+            <div className="table-wrapper">
+              <table>
+                <thead>
+                  <tr>
+                    {executionResult.columns.map((col, index) => (
+                      <th key={index}>{col}</th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {executionResult.rows.map((row, rowIndex) => (
+                    <tr key={rowIndex}>
+                      {executionResult.columns.map((col, colIndex) => (
+                        <td key={colIndex}>{row[col]}</td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <p className="result-meta">
+              Status: {executionResult.status} | Query ID: {executionResult.query_id}
+            </p>
           </div>
         )}
       </main>

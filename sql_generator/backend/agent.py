@@ -9,6 +9,10 @@ from datetime import datetime
 sys.path.append(os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "mcp_server"))
 import server
 
+# Add trino to path
+sys.path.append(os.path.join(os.path.dirname(os.path.abspath(__file__)), "trino"))
+from trino_connection import execute_sql_query, new_melody_client
+
 class SQLAgent:
     def __init__(self):
         self.feedback_file = os.path.join(os.path.dirname(__file__), "feedback.json")
@@ -71,7 +75,7 @@ class SQLAgent:
         
         # System Prompt
         system_prompt = f"""
-You are an expert SQL generator for the 'ccs-aquila-tahoe' database.
+You are an expert SQL generator for the 'ccs-mira-tahoe' database.
 
 ### Database Schema
 {schema}
@@ -131,7 +135,6 @@ IMPORTANT:
                 sql_response = sql_response.split("```")[1].split("```")[0].strip()
 
             # --- CTE INJECTION LOGIC (OPTIMIZED) ---
-            # --- CTE INJECTION LOGIC (OPTIMIZED) ---
             # Extract standard CTEs from rules
             if "```sql" in rules:
                 raw_ctes = rules.split("```sql")[1].split("```")[0].strip()
@@ -188,3 +191,18 @@ IMPORTANT:
         except Exception as e:
             print(f"Error calling Ollama: {e}")
             return f"-- Error generating SQL: {str(e)}"
+
+    def execute_sql(self, sql_query: str):
+        """Executes the SQL query using Trino."""
+        try:
+            # Remove trailing semicolon if present
+            sql_query = sql_query.strip()
+            if sql_query.endswith(";"):
+                sql_query = sql_query[:-1]
+                
+            melody = new_melody_client().create()
+            result = execute_sql_query(melody, sql_query)
+            return result
+        except Exception as e:
+            print(f"Error executing SQL: {e}")
+            raise e

@@ -26,11 +26,22 @@ class FeedbackRequest(BaseModel):
     sql: str
     rating: str  # "Good" or "Bad"
 
+class ExecuteRequest(BaseModel):
+    sql: str
+
 @app.post("/api/generate_sql")
 async def generate_sql(request: QueryRequest):
     try:
         sql = await agent.generate_sql(request.query, request.history)
         return {"sql": sql}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+@app.post("/api/execute_sql")
+async def execute_sql(request: ExecuteRequest):
+    try:
+        result = agent.execute_sql(request.sql)
+        return result
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
